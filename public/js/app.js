@@ -1,4 +1,5 @@
 var API_KEY = 'K8SxeJUqDCKL3wvYXY2N90';
+var ITEMS_PER_PAGE = 100;
 
 var LinkHay = {
 	everything: {},
@@ -25,21 +26,21 @@ var LinkHay = {
 		LinkHay.resetContainer();
 	},
 	resetContainer: function() {
-		$('#thePublished').html('Kênh Đang Tải');
+		$('#thePublished').html('Kênh Đang Tải...');
 		$('#thePoster').html('Chưa biết ma nào');
 		
 		$('#theTitle').html('Tin cũng đang tải...');
 		$('#theTitle').attr('href', '');
 		$('#theTitle').attr('title', 'Bấm bấm cái gì mà bấm?');		
 		
-		$('#theContent').html('<p>Đang lấy dữ liệu từ LinkHay... Hơi lâu một chút bạn thông cảm nhé... (Mà có không thông cảm cũng chẳng được, LOL)</p>');
+		$('#theContent').html('<p>Đang lấy dữ liệu từ LinkHay... Hơi lâu một chút bạn thông cảm nhé... (Mà có không thông cảm cũng chẳng được, LOL)</p><p>Đợi lâu quá không thấy gì thì chuyển sang tin kế tiếp cũng được.</p>');
 		
 		$('#theComments').html('');
 	},
 	getNews: function(opt) {
 		var options = opt || {channel:''};
 		
-		$.getJSON('/r/get/news/json/?callback=?', {app_key: API_KEY, itemperpage: 100}, function(json) {
+		$.getJSON('/r/get/news/json/?callback=?', {app_key: API_KEY, itemperpage: ITEMS_PER_PAGE}, function(json) {
 			LinkHay.everything = json;
 			
 			LinkHay.links = json.data.map(function(link) {
@@ -62,8 +63,7 @@ var LinkHay = {
 			$('#theTitle').attr('href', json.responseUrl);
 			$('#theTitle').attr('title', json.title);
 			
-			$('#theContent').html(json.content);
-			
+			$('#theContent').html(json.content.replace(/style=".*?"/ig, '').replace(/<\/?span.*?>/ig, ''));				
 			$('#theContent img').addClass('alignright');
 			
 			$('#theComments').html('<a target="_blank" href="http://linkhay.com' + currentLink.link_detail_url + '">' + currentLink.votecount + ' vote, ' + currentLink.commentcount + ' bình luận</a>');
