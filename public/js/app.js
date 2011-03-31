@@ -43,8 +43,6 @@ var LinkHay = {
 				return link.realurl;
 			});
 			
-			console.log(LinkHay.links);
-			
 			LinkHay.getNext();
 		});
 	},
