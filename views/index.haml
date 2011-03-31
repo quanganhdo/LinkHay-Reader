@@ -3,17 +3,17 @@
     %abbr.published#thePublished
   .postContent
     %h3.entry-title
-      %a#theTitle{:href => '', :title => ''} 
+      %a#theTitle{:target => '_blank'} 
     %h4.vcard.author
       %span.fn#thePoster
       gửi
     .entry-content#theContent
     .postMeta
       .comments
-        %a{:href => 'http://facebook.com/quanganhdo', :title => 'Facebook'} facebook
+        %a#theComments
       
 .pageNav
   .prev
-    %a#thePrev{:href => 'javascript:return false', :title => ''} &larr; Nhầm, quay lại link trước
+    %a#thePrev{:href => ''} &larr; Nhầm, quay lại link trước
   .next
-    %a#theNext{:href => 'javascript:return false', :title => ''} Nữa đi &rarr;
+    %a#theNext{:href => ''} Nữa đi &rarr;

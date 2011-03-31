@@ -9,8 +9,15 @@ var LinkHay = {
 			timeout: 20000
 		});
 		
-		$('#thePrev').click(LinkHay.getPrev);
-		$('#theNext').click(LinkHay.getNext);
+		$('#thePrev').click(function(e) {
+			e.preventDefault();
+			LinkHay.getPrev();
+		});
+		
+		$('#theNext').click(function(e) {
+			e.preventDefault();
+			LinkHay.getNext();
+		});
 		
 		LinkHay.resetContainer();
 	},
@@ -19,10 +26,12 @@ var LinkHay = {
 		$('#thePoster').html('Chưa biết ma nào');
 		
 		$('#theTitle').html('Tin cũng đang tải...');
-		$('#theTitle').attr('href', 'javascript:return false');
-		$('#theTitle').attr('title', 'Bấm bấm cái gì mà bấm?');
+		$('#theTitle').attr('href', '');
+		$('#theTitle').attr('title', 'Bấm bấm cái gì mà bấm?');		
 		
 		$('#theContent').html('<p>Đang lấy dữ liệu từ LinkHay... Hơi lâu một chút bạn thông cảm nhé... (Mà có không thông cảm cũng chẳng được, LOL)</p>');
+		
+		$('#theComments').html('');
 	},
 	getNews: function(opt) {
 		var options = opt || {channel:''};
@@ -43,8 +52,10 @@ var LinkHay = {
 		LinkHay.resetContainer();		
 		
 		$.getJSON("http://viewtext.org/api/text?url=" + LinkHay.links[LinkHay.currentLinkIndex] + "&callback=?", function(json) {			
-			$('#thePublished').html(LinkHay.everything.data[LinkHay.currentLinkIndex].channelname);
-			$('#thePoster').html(LinkHay.everything.data[LinkHay.currentLinkIndex].postuser);
+			var currentLink = LinkHay.everything.data[LinkHay.currentLinkIndex];
+			
+			$('#thePublished').html(currentLink.channelname);
+			$('#thePoster').html(currentLink.postuser);
 			
 			$('#theTitle').html(json.title);
 			$('#theTitle').attr('href', json.responseUrl);
@@ -53,6 +64,8 @@ var LinkHay = {
 			$('#theContent').html(json.content);
 			
 			$('#theContent img').addClass('alignright');
+			
+			$('#theComments').html('<a target="_blank" href="http://linkhay.com' + currentLink.link_detail_url + '">' + currentLink.votecount + ' vote, ' + currentLink.commentcount + ' bình luận</a>');
 		});		
 	},
 	getPrev: function() {
