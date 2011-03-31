@@ -1,0 +1,37 @@
+!!!
+%html
+	%head
+		%meta{'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf-8'}
+		%title LinkHay Reader by @quanganhdo
+		%link{:rel => 'stylesheet', :type => 'text/css', :media => 'screen', :href => '/css/style.css'}
+		%script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'}
+		%script{:type => 'text/javascript', :src => '/js/app.js'}		
+		
+	%body
+		#siteWrapper
+			%h1.vcard.author
+				%a.fn{:href => '/', :title => 'Reader'} LinkHay Reader
+				
+			#mainNav
+				%ul
+					%li Whatever
+					%li Whatever
+					%li Whatever
+			
+			#siteDescription Viết vội trong một ngày, có gì sai sót xin được lượng thứ
+			
+			#coreContent.hfeed
+				= yield
+			
+		#footer
+			%h5 Tớ là ai?
+			%ul.elsewhere
+				%li
+					%a{:href => 'http://works.quanganhdo.com', :title => 'Portfolio'} Portfolio
+				%li
+					%a{:href => 'http://twitter.com/quanganhdo', :title => 'Twitter'} Twitter
+				%li
+					%a{:href => 'http://facebook.com/quanganhdo', :title => 'Facebook'} Facebook
+			.footerContent
+				%p
+					Powered by Whatever
