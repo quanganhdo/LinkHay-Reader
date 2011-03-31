@@ -40,19 +40,17 @@ var LinkHay = {
 		$(document).bind('keypress', 'j', LinkHay.getNext);
 		$(document).bind('keypress', 'k', LinkHay.getPrev);
 		
-		LinkHay.resetContainer();
+		LinkHay.resetItem();
 	},
-	resetContainer: function() {
-		$('#thePublished').html('Kênh Đang Tải...');
-		$('#thePoster').html('Chưa biết ma nào');
-		
-		$('#theTitle').html('Tin cũng đang tải...');
-		$('#theTitle').attr('href', '');
-		$('#theTitle').attr('title', 'Bấm bấm cái gì mà bấm?');		
-		
-		$('#theContent').html('<p>Đang lấy dữ liệu từ LinkHay... Hơi lâu một chút bạn thông cảm nhé... (Mà có không thông cảm cũng chẳng được, LOL)</p><p>Đợi lâu quá không thấy gì thì chuyển sang tin kế tiếp cũng được.</p>');
-		
-		$('#theComments').html('');
+	resetItem: function() {
+		LinkHay.setItem({
+			channel: 'Kênh Đang Tải...',
+			poster: 'Chưa biết ma nào',
+			title: 'Tin cũng đang tải...',
+			link: '', 
+			content: '<p>Đang lấy dữ liệu từ LinkHay... Hơi lâu một chút bạn thông cảm nhé... (Mà có không thông cảm cũng chẳng được, LOL)</p><p>Đợi lâu quá không thấy gì thì chuyển sang tin kế tiếp cũng được.</p>',
+			commentsHTML: ''
+		});
 	},
 	getNews: function(opt) {
 		var options = opt || {channel:''};
@@ -68,7 +66,7 @@ var LinkHay = {
 		});
 	},
 	getNew: function() {
-		LinkHay.resetContainer();		
+		LinkHay.resetItem();		
 		
 		$.getJSON("http://viewtext.org/api/text?url=" + LinkHay.links[LinkHay.currentLinkIndex] + "&callback=?", function(json) {			
 			var currentLink = LinkHay.everything.data[LinkHay.currentLinkIndex];
@@ -103,7 +101,7 @@ var LinkHay = {
 		$('#theComments').html(item.commentsHTML);
 	},
 	getId: function(id) {
-		LinkHay.resetContainer();
+		LinkHay.resetItem();
 		
 		$.getJSON('/r/get/link/json/?callback=?', {app_key: API_KEY, id: id}, function(json) {
 			LinkHay.everything = json;
