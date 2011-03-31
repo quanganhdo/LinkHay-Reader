@@ -14,11 +14,11 @@
 				
 			#mainNav
 				%ul
-					%li Whatever
-					%li Whatever
-					%li Whatever
+					%li
+						By
+						%a{:href => 'http://twitter.com/quanganhdo', :title => '@quanganhdo'} @quanganhdo
 			
-			#siteDescription Viết vội trong một ngày, có gì sai sót xin được lượng thứ
+			#siteDescription Đọc từng tin một trên LinkHay, không quan tâm đến vote, bình luận, bạn bè, thông báo hay bất cứ cái gì khác
 			
 			#coreContent.hfeed
 				= yield
@@ -34,4 +34,10 @@
 					%a{:href => 'http://facebook.com/quanganhdo', :title => 'Facebook'} Facebook
 			.footerContent
 				%p
-					Powered by Whatever
+					%a{:href => 'http://twitter.com/quanganhdo', :title => '@quanganhdo'} @quanganhdo
+					viết 
+					&middot; 
+					Dùng theme Manifest của
+					%a{:href => 'http://jimbarraud.com/2009/03/19/manifest/', :title => 'Jim Barraud'} Jim Barraud
+					&middot;
+					Dữ liệu lấy qua API của LinkHay

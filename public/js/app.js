@@ -36,7 +36,7 @@ var LinkHay = {
 	getNews: function(opt) {
 		var options = opt || {channel:''};
 		
-		$.getJSON('/r/get/news/json/?callback=?', {app_key: API_KEY}, function(json) {
+		$.getJSON('/r/get/news/json/?callback=?', {app_key: API_KEY, itemperpage: 100}, function(json) {
 			LinkHay.everything = json;
 			
 			LinkHay.links = json.data.map(function(link) {
