@@ -11,7 +11,7 @@ var LinkHay = {
 	getNews: function(opt) {
 		var options = opt || {channel:''};
 		
-		$.getJSON('/r/get/news/json/', {app_key: API_KEY}, function(json) {
+		$.getJSON('/r/get/news/json/?callback=?', {app_key: API_KEY}, function(json) {
 			console.log(json);
 			// 
 			// LinkHay.links = json.data.map(function() {
