@@ -1,3 +1,9 @@
+// To be fixed/added:
+// - Broken back/forward buttons
+// - Caching engine to speed up loading time
+// - Channel surfing
+// Anyway, this is a Write Once, Abandon Forever production; thus, these features will never see the light of day
+
 var API_KEY = 'K8SxeJUqDCKL3wvYXY2N90';
 var ITEMS_PER_PAGE = 100;
 
