@@ -123,7 +123,6 @@ var LinkHay = {
 			return;
 		}
 		
-		alert('Đọc thế thôi, làm việc tiếp đi! (Muốn đọc tin mới thì về trang chủ nhé)');
 		document.location.href = '/';
 	}
 }
