@@ -43,7 +43,7 @@ var LinkHay = {
 				return link.realurl;
 			});
 			
-			LinkHay.getNext();
+			LinkHay.getNew();
 		});
 	},
 	getNew: function() {
