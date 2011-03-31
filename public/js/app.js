@@ -4,6 +4,7 @@ var ITEMS_PER_PAGE = 100;
 var LinkHay = {
 	everything: {},
 	links: [],
+	caches: {},
 	currentLinkIndex: 0,
 	ignoreState: false,
 	setUp: function() {
@@ -71,24 +72,35 @@ var LinkHay = {
 		
 		$.getJSON("http://viewtext.org/api/text?url=" + LinkHay.links[LinkHay.currentLinkIndex] + "&callback=?", function(json) {			
 			var currentLink = LinkHay.everything.data[LinkHay.currentLinkIndex];
+			var item = {
+				channel: 'Kênh ' + (currentLink.channelname ? currentLink.channelname : currentLink.channel_name),
+				poster: currentLink.postuser ? currentLink.postuser : currentLink.post_user,
+				title: json.title,
+				link: json.responseUrl, 
+				content: json.content.replace(/style=".*?"/ig, '').replace(/<\/?span.*?>/ig, ''),
+				commentsHTML: '<a target="_blank" href="http://linkhay.com' + currentLink.link_detail_url + '">' + (currentLink.votecount ? currentLink.votecount : currentLink.vote_count) + ' vote, ' + (currentLink.commentcount ? currentLink.commentcount : currentLink.comment_count) + ' bình luận</a>'
+			};
 			
-			$('#thePublished').html('Kênh ' + (currentLink.channelname ? currentLink.channelname : currentLink.channel_name));
-			$('#thePoster').html(currentLink.postuser ? currentLink.postuser : currentLink.post_user);
-			
-			$('#theTitle').html(json.title);
-			$('#theTitle').attr('href', json.responseUrl);
-			$('#theTitle').attr('title', json.title);
-			
-			$('#theContent').html(json.content.replace(/style=".*?"/ig, '').replace(/<\/?span.*?>/ig, ''));				
-			$('#theContent img').addClass('alignright');
-			
-			$('#theComments').html('<a target="_blank" href="http://linkhay.com' + currentLink.link_detail_url + '">' + (currentLink.votecount ? currentLink.votecount : currentLink.vote_count) + ' vote, ' + (currentLink.commentcount ? currentLink.commentcount : currentLink.comment_count) + ' bình luận</a>');
+			LinkHay.setItem(item);
 			
 			if (currentLink.linkid)
 				$.History.go('/' + currentLink.linkid + '/' + currentLink.slug)
 			else
 				$.History.go('/' + currentLink.link_id + '/' + currentLink.slug)			
 		});		
+	},
+	setItem: function(item) {
+		$('#thePublished').html(item.channel);
+		$('#thePoster').html(item.poster);
+		
+		$('#theTitle').html(item.title);
+		$('#theTitle').attr('href', item.link);
+		$('#theTitle').attr('title', item.title);
+		
+		$('#theContent').html(item.content);				
+		$('#theContent img').addClass('alignright');
+		
+		$('#theComments').html(item.commentsHTML);
 	},
 	getId: function(id) {
 		LinkHay.resetContainer();
