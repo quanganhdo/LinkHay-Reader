@@ -3,7 +3,6 @@ var ITEMS_PER_PAGE = 100;
 
 var LinkHay = {
 	everything: {},
-	links: [],
 	caches: {},
 	currentLinkIndex: 0,
 	ignoreState: false,
@@ -58,17 +57,14 @@ var LinkHay = {
 		$.getJSON('/r/get/news/json/?callback=?', {app_key: API_KEY, itemperpage: ITEMS_PER_PAGE}, function(json) {
 			LinkHay.everything = json;
 			
-			LinkHay.links = json.data.map(function(link) {
-				return link.realurl;
-			});
-			
 			LinkHay.getNew();
 		});
 	},
 	getNew: function() {
 		LinkHay.resetItem();		
 		
-		$.getJSON("http://viewtext.org/api/text?url=" + LinkHay.links[LinkHay.currentLinkIndex] + "&callback=?", function(json) {			
+		var url = LinkHay.everything.data[LinkHay.currentLinkIndex].realurl ? LinkHay.everything.data[LinkHay.currentLinkIndex].realurl : LinkHay.everything.data[LinkHay.currentLinkIndex].real_url;
+		$.getJSON("http://viewtext.org/api/text?callback=?", {url: url}, function(json) {			
 			var currentLink = LinkHay.everything.data[LinkHay.currentLinkIndex];
 			var item = {
 				channel: 'Kênh ' + (currentLink.channelname ? currentLink.channelname : currentLink.channel_name),
@@ -106,10 +102,6 @@ var LinkHay = {
 		$.getJSON('/r/get/link/json/?callback=?', {app_key: API_KEY, id: id}, function(json) {
 			LinkHay.everything = json;
 			
-			LinkHay.links = json.data.map(function(link) {
-				return link.real_url;
-			});
-			
 			LinkHay.getNew();
 		});
 	},
@@ -124,7 +116,7 @@ var LinkHay = {
 		alert('Còn tin nào nữa đâu mà quay lại?');
 	},
 	getNext: function() {
-		if (LinkHay.currentLinkIndex < LinkHay.links.length-1) {
+		if (LinkHay.currentLinkIndex < LinkHay.everything.data.length-1) {
 			LinkHay.currentLinkIndex++;
 			LinkHay.getNew();						
 			
