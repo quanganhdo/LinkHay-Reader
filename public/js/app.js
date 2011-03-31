@@ -5,13 +5,11 @@ var LinkHay = {
 	everything: {},
 	links: [],
 	currentLinkIndex: 0,
+	ignoreState: false,
 	setUp: function() {
 		$.ajaxSetup({
 			timeout: 20000
 		});
-		
-		$(document).bind('keypress', 'j', LinkHay.getNext);
-		$(document).bind('keypress', 'k', LinkHay.getPrev);
 		
 		$('.prev a').click(function(e) {
 			e.preventDefault();
@@ -22,6 +20,24 @@ var LinkHay = {
 			e.preventDefault();
 			LinkHay.getNext();
 		});
+		
+		if (!document.location.href.match(/#/)) {
+			LinkHay.ignoreState = true;
+			LinkHay.getNews();
+		}
+		
+		$.History.bind(function(state) {
+			if (state.split('/').length < 2) return;
+			if (LinkHay.ignoreState) return;
+			
+			LinkHay.ignoreState = true;
+			
+			var linkid = state.split('/')[1];
+			LinkHay.getId(linkid);
+		});
+		
+		$(document).bind('keypress', 'j', LinkHay.getNext);
+		$(document).bind('keypress', 'k', LinkHay.getPrev);
 		
 		LinkHay.resetContainer();
 	},
@@ -56,8 +72,8 @@ var LinkHay = {
 		$.getJSON("http://viewtext.org/api/text?url=" + LinkHay.links[LinkHay.currentLinkIndex] + "&callback=?", function(json) {			
 			var currentLink = LinkHay.everything.data[LinkHay.currentLinkIndex];
 			
-			$('#thePublished').html(currentLink.channelname);
-			$('#thePoster').html(currentLink.postuser);
+			$('#thePublished').html('Kênh ' + (currentLink.channelname ? currentLink.channelname : currentLink.channel_name));
+			$('#thePoster').html(currentLink.postuser ? currentLink.postuser : currentLink.post_user);
 			
 			$('#theTitle').html(json.title);
 			$('#theTitle').attr('href', json.responseUrl);
@@ -66,8 +82,26 @@ var LinkHay = {
 			$('#theContent').html(json.content.replace(/style=".*?"/ig, '').replace(/<\/?span.*?>/ig, ''));				
 			$('#theContent img').addClass('alignright');
 			
-			$('#theComments').html('<a target="_blank" href="http://linkhay.com' + currentLink.link_detail_url + '">' + currentLink.votecount + ' vote, ' + currentLink.commentcount + ' bình luận</a>');
+			$('#theComments').html('<a target="_blank" href="http://linkhay.com' + currentLink.link_detail_url + '">' + (currentLink.votecount ? currentLink.votecount : currentLink.vote_count) + ' vote, ' + (currentLink.commentcount ? currentLink.commentcount : currentLink.comment_count) + ' bình luận</a>');
+			
+			if (currentLink.linkid)
+				$.History.go('/' + currentLink.linkid + '/' + currentLink.slug)
+			else
+				$.History.go('/' + currentLink.link_id + '/' + currentLink.slug)			
 		});		
+	},
+	getId: function(id) {
+		LinkHay.resetContainer();
+		
+		$.getJSON('/r/get/link/json/?callback=?', {app_key: API_KEY, id: id}, function(json) {
+			LinkHay.everything = json;
+			
+			LinkHay.links = json.data.map(function(link) {
+				return link.real_url;
+			});
+			
+			LinkHay.getNew();
+		});
 	},
 	getPrev: function() {
 		if (LinkHay.currentLinkIndex > 0) {
@@ -87,13 +121,13 @@ var LinkHay = {
 			return;
 		}
 		
-		alert('Đọc trăm tin rồi, làm việc tiếp đi!');
+		alert('Đọc thế thôi, làm việc tiếp đi! (Muốn đọc tin mới thì về trang chủ nhé)');
+		document.location.href = '/';
 	}
 }
 
 $(function() {
-	LinkHay.setUp();
-	LinkHay.getNews({});	
+	LinkHay.setUp();	
 });
 
 /*
